@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "634918728641",
+    "project_id": "ffmpeg-service-provider",
+    "storage_bucket": "ffmpeg-service-provider.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634918728641:android:9ad70f70709635e4d9f540",
+        "android_client_info": {
+          "package_name": "com.example.ffmpeg_base_minitask_executer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "634918728641-e7gfqe047q9tqn8ool1ldkkd9g1e0sc4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ffmpeg_base_minitask_executer",
+            "certificate_hash": "d2aef1ee727d3f8ae3446504bf1896ac6f49272c"
+          }
+        },
+        {
+          "client_id": "634918728641-r3kcbmf9m3f64glll85m800e57e8ofge.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArL-E3SZzHh-8PIQ8KhWTfQMR3F5Jtzh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "634918728641-r3kcbmf9m3f64glll85m800e57e8ofge.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "634918728641-mi8d0kuljp14oq127jb12p5ogabiq3p3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ffmpegBaseMinitaskExecuter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
