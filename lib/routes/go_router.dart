@@ -1,8 +1,10 @@
 import 'package:ffmpeg_base_minitask_executer/pages/auth/login.dart';
 import 'package:ffmpeg_base_minitask_executer/pages/error/error_page.dart';
 import 'package:ffmpeg_base_minitask_executer/pages/home/homepage.dart';
+import 'package:ffmpeg_base_minitask_executer/pages/profile/user_profile.dart';
 import 'package:ffmpeg_base_minitask_executer/pages/wrapper/wrapper.dart';
 import 'package:ffmpeg_base_minitask_executer/routes/router_names.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 
 class GoRouterClass {
@@ -37,6 +39,14 @@ class GoRouterClass {
         name: RouterNames.errorPage,
         builder: (context, state) {
           return ErrorPage();
+        },
+      ),
+      GoRoute(
+        path: "/profile",
+        name: RouterNames.profilePage,
+        builder: (context, state) {
+          final user = state.extra as User;
+          return UserProfile(userData: user);
         },
       ),
     ],

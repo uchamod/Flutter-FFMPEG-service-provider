@@ -3,4 +3,5 @@ class RouterNames {
   static const String loginPage = "login";
   static const String wrapperPage = "/";
   static const String errorPage = "error";
+  static const String profilePage = "profile";
 }

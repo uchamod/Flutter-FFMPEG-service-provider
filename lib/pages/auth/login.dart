@@ -16,6 +16,7 @@ class AuthenticationPage extends StatefulWidget {
 
 class _AuthenticationPageState extends State<AuthenticationPage> {
   final AuthServices _authServices = AuthServices();
+  //google sing in
   Future<void> _userLogin() async {
     try {
       await _authServices.googleSignIn();
@@ -50,6 +51,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
     }
   }
 
+  //anonmus sign in
   Future<void> _userLoginAnonmusly() async {
     try {
       await _authServices.singInAnonomusly();
@@ -94,6 +96,9 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              //logo
+              Image.asset("assets/logo.png", height: 128, width: 128),
+              SizedBox(height: 16),
               Text("Sing In", style: FontStyles().fontTitle),
               SizedBox(height: constCommonPad),
               //google sing in
