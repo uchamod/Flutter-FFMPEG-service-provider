@@ -3,6 +3,7 @@ import 'package:ffmpeg_base_minitask_executer/routes/router_names.dart';
 import 'package:ffmpeg_base_minitask_executer/util/colors.dart';
 import 'package:ffmpeg_base_minitask_executer/util/font_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -42,14 +43,23 @@ class _HomepageState extends State<Homepage> {
                       ).goNamed(RouterNames.profilePage, extra: user);
                     },
                     child: CircleAvatar(
-                      maxRadius: 28,
                       backgroundColor: colorMercury,
-                      foregroundImage:
+                      radius: 24,
+                      backgroundImage:
                           user.isAnonymous
-                              ? AssetImage("assets/icons8-anonymous.svg")
+                              ? null
                               : NetworkImage(user.photoURL!),
+                      child:
+                          user.isAnonymous
+                              ? SvgPicture.asset(
+                                "assets/icons8-anonymous.svg",
+                                width: 24,
+                                height: 24,
+                              )
+                              : null,
                     ),
                   ),
+                  SizedBox(width: 12),
                 ],
               ),
               body: Padding(

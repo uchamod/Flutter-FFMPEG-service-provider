@@ -89,9 +89,11 @@ class AuthServices {
   Future<void> singInAnonomusly() async {
     try {
       UserCredential userCredential = await _firebaseAuth.signInAnonymously();
+      print("anonymous user crediential $userCredential");
       User? user = userCredential.user;
       if (user != null) {
         print("succssussfuly sing in");
+        print("anonymous user $user");
       }
     } on FirebaseAuthException catch (err) {
       throw Exception(err);

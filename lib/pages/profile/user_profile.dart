@@ -5,6 +5,7 @@ import 'package:ffmpeg_base_minitask_executer/util/constants.dart';
 import 'package:ffmpeg_base_minitask_executer/util/font_styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 class UserProfile extends StatefulWidget {
@@ -43,23 +44,45 @@ class _UserProfileState extends State<UserProfile> {
       body: Padding(
         padding: EdgeInsets.all(constCommonPad),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircleAvatar(
-              backgroundColor: colordustyGray,
+              backgroundColor: colorMercury,
               radius: 64,
-              backgroundImage: NetworkImage(widget.userData.photoURL!),
+              backgroundImage:
+                  widget.userData.isAnonymous
+                      ? null
+                      : NetworkImage(widget.userData.photoURL!),
+              child:
+                  widget.userData.isAnonymous
+                      ? SvgPicture.asset(
+                        "assets/icons8-anonymous.svg",
+                        width: 64,
+                        height: 64,
+                      )
+                      : null,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  widget.userData.displayName!,
-                  style: FontStyles().fontSubTitle,
+            SizedBox(height: 12),
+            widget.userData.isAnonymous
+                ? Text("Anonomus User", style: FontStyles().fontSubTitle)
+                : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        widget.userData.displayName!,
+                        style: FontStyles().fontSubTitle,
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        widget.userData.email!,
+                        style: FontStyles().fontSubTitle,
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 8),
-                Text(widget.userData.email!, style: FontStyles().fontSubTitle),
-              ],
-            ),
           ],
         ),
       ),
