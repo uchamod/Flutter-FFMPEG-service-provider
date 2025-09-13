@@ -1,5 +1,6 @@
 import 'package:ffmpeg_base_minitask_executer/pages/auth/login.dart';
 import 'package:ffmpeg_base_minitask_executer/pages/error/error_page.dart';
+import 'package:ffmpeg_base_minitask_executer/pages/gif_generator_page/gif_generatoe_page.dart';
 import 'package:ffmpeg_base_minitask_executer/pages/home/homepage.dart';
 import 'package:ffmpeg_base_minitask_executer/pages/profile/user_profile.dart';
 import 'package:ffmpeg_base_minitask_executer/pages/wrapper/wrapper.dart';
@@ -47,6 +48,13 @@ class GoRouterClass {
         builder: (context, state) {
           final user = state.extra as User;
           return UserProfile(userData: user);
+        },
+      ),
+      GoRoute(
+        path: "/gif",
+        name: RouterNames.gifPage,
+        builder: (context, state) {
+          return GifGeneratoePage();
         },
       ),
     ],
