@@ -1,10 +1,15 @@
+import 'dart:io';
+
+import 'package:ffmpeg_base_minitask_executer/routes/router_names.dart';
 import 'package:ffmpeg_base_minitask_executer/services/downloader_services/video_downloader_services.dart';
 import 'package:ffmpeg_base_minitask_executer/util/colors.dart';
 import 'package:ffmpeg_base_minitask_executer/util/constants.dart';
 import 'package:ffmpeg_base_minitask_executer/util/font_styles.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gallery_saver_plus/gallery_saver.dart';
+import 'package:go_router/go_router.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoDownloadPage extends StatefulWidget {
@@ -60,6 +65,23 @@ class _VideoDownloadPageState extends State<VideoDownloadPage> {
         if (_filePath != null) {
           _statusMessage =
               'Video downloaded successfully!\nSaved to: $_filePath';
+          _videoPlayerController?.dispose();
+          _videoPlayerController = VideoPlayerController.file(
+            File(_filePath!),
+            videoPlayerOptions: VideoPlayerOptions(
+              allowBackgroundPlayback: true,
+              webOptions: VideoPlayerWebOptions(
+                allowContextMenu: true,
+                controls: VideoPlayerWebOptionsControls.enabled(
+                  allowDownload: true,
+                  allowFullscreen: true,
+                  allowPlaybackRate: true,
+                  allowPictureInPicture: true,
+                ),
+              ),
+            ),
+          );
+          _videoPlayerController!.initialize();
         } else {
           _statusMessage = 'Download failed. Please try again.';
         }
@@ -103,7 +125,37 @@ class _VideoDownloadPageState extends State<VideoDownloadPage> {
           child: Padding(
             padding: EdgeInsets.all(constCommonPad),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                GestureDetector(
+                  onTap: () {
+                    GoRouter.of(context).goNamed(RouterNames.homePage);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(4),
+                    width: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Row(
+                      spacing: 4,
+                      mainAxisAlignment: MainAxisAlignment.center,
+
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.arrow_back, size: 28, color: colordustyGray),
+                        Icon(
+                          CupertinoIcons.home,
+                          size: 28,
+                          color: colordustyGray,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16),
+
                 if (_statusMessage.isNotEmpty) ...[
                   Container(
                     padding: EdgeInsets.all(6),
@@ -123,9 +175,12 @@ class _VideoDownloadPageState extends State<VideoDownloadPage> {
                 ],
 
                 //select platform
-                Text(
-                  "Select Media Platform :",
-                  style: FontStyles().fontBody.copyWith(fontSize: 16),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Select Media Platform :",
+                    style: FontStyles().fontBody.copyWith(fontSize: 16),
+                  ),
                 ),
                 SizedBox(height: 8),
                 //medias
@@ -133,15 +188,56 @@ class _VideoDownloadPageState extends State<VideoDownloadPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     //yt
-                    _mediaIcon("assets/icons8-youtube.svg", _isytSelected, 1),
-                    SizedBox(width: 6),
-                    //tiktok
-                    _mediaIcon(
-                      "assets/icons8-tiktok.svg",
-                      _isTikSelectMedia,
-                      2,
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isytSelected = !_isytSelected;
+                          mediaType = 1;
+                        });
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(48),
+                          border: Border.all(
+                            color: _isytSelected ? colorFern : colordustyGray,
+                            width: 2,
+                          ),
+                        ),
+                        child: SvgPicture.asset(
+                          "assets/icons8-youtube.svg",
+                          width: 44,
+                          height: 44,
+                        ),
+                      ),
                     ),
-                    SizedBox(width: 6),
+                    SizedBox(width: 8),
+                    //tiktok
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isTikSelectMedia = !_isTikSelectMedia;
+                          mediaType = 2;
+                        });
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(48),
+                          border: Border.all(
+                            color:
+                                _isTikSelectMedia ? colorFern : colordustyGray,
+                            width: 2,
+                          ),
+                        ),
+                        child: SvgPicture.asset(
+                          "assets/icons8-tiktok.svg",
+                          width: 44,
+                          height: 44,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8),
                     //insta
                     GestureDetector(
                       onTap: () {
@@ -206,52 +302,35 @@ class _VideoDownloadPageState extends State<VideoDownloadPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
-
                 //previwe & save section
-                if (_filePath != null && _videoPlayerController != null) ...[
-                  Container(child: VideoPlayer(_videoPlayerController!)),
-                  SizedBox(height: 8),
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      await saveGitInGallery(_filePath!);
-                    },
-                    label: Text("Saved", style: FontStyles().fontBody),
-                    icon: Icon(Icons.save, size: 28, color: colorMercury),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorFern,
-                      foregroundColor: colorMercury,
-                      elevation: 2,
-                      padding: EdgeInsets.all(12),
-                    ),
-                  ),
-                ],
+                SizedBox(height: 16),
+                _videoPlayerController != null
+                    ? AspectRatio(
+                      aspectRatio: _videoPlayerController!.value.aspectRatio,
+                      child: VideoPlayer(_videoPlayerController!),
+                    )
+                    : Container(),
+                SizedBox(height: 8),
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: ElevatedButton.icon(
+                //     onPressed: () async {
+                //       await saveGitInGallery(_filePath!);
+                //     },
+                //     label: Text("Saved", style: FontStyles().fontBody),
+                //     icon: Icon(Icons.save, size: 28, color: colorMercury),
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: colorFern,
+                //       foregroundColor: colorMercury,
+                //       elevation: 2,
+                //       padding: EdgeInsets.all(12),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _mediaIcon(String iconPath, bool isSelected, double media) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          isSelected = !isSelected;
-          mediaType = media;
-        });
-      },
-      child: Container(
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(48),
-          border: Border.all(
-            color: isSelected ? colorFern : colordustyGray,
-            width: 2,
-          ),
-        ),
-        child: SvgPicture.asset(iconPath, width: 44, height: 44),
       ),
     );
   }

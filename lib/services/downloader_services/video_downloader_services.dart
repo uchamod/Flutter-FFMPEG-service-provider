@@ -34,7 +34,8 @@ class VideoDownloaderServices {
         );
         if (response.statusCode == 200) {
           final videoData = jsonDecode(response.body);
-          videoUrl = videoData["resp"];
+          videoUrl = videoData["resp"] ?? "";
+          tubnail = "";
         }
         //insta
       } else {
@@ -59,7 +60,7 @@ class VideoDownloaderServices {
       }
       return {"videoUrl": videoUrl, "thumb": tubnail};
     } catch (err) {
-      print("fail to download video fro resource $err");
+      print("fail to download video from resource $err");
       return {};
     }
   }
@@ -101,7 +102,7 @@ class VideoDownloaderServices {
         throw Exception('Could not access download directory');
       }
 
-      final filePath = '${downloadDir.path}/$fileName}';
+      final filePath = '${downloadDir.path}/$fileName';
 
       //download the video
       await _dio.download(
@@ -139,7 +140,7 @@ class VideoDownloaderServices {
       }
       //get file name
       final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final fileName = 'instagram_video_$timestamp.mp4';
+      final fileName = 'snap_video_$timestamp.mp4';
 
       //download video
       final file = await downloadVideo(
@@ -155,6 +156,7 @@ class VideoDownloaderServices {
     }
   }
 
+  //select base url
   String _endUrlByMediaType(double type) {
     switch (type) {
       case 1:
