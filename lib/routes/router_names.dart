@@ -5,4 +5,6 @@ class RouterNames {
   static const String errorPage = "error";
   static const String profilePage = "profile";
   static const String gifPage = "gif";
+  static const String imagePage = "image";
+  static const String downloadPage = "download";
 }

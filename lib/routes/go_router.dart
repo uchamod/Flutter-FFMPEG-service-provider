@@ -3,6 +3,7 @@ import 'package:ffmpeg_base_minitask_executer/pages/error/error_page.dart';
 import 'package:ffmpeg_base_minitask_executer/pages/gif_generator_page/gif_generatoe_page.dart';
 import 'package:ffmpeg_base_minitask_executer/pages/home/homepage.dart';
 import 'package:ffmpeg_base_minitask_executer/pages/profile/user_profile.dart';
+import 'package:ffmpeg_base_minitask_executer/pages/video_download_page/video_download_page.dart';
 import 'package:ffmpeg_base_minitask_executer/pages/wrapper/wrapper.dart';
 import 'package:ffmpeg_base_minitask_executer/routes/router_names.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -55,6 +56,20 @@ class GoRouterClass {
         name: RouterNames.gifPage,
         builder: (context, state) {
           return GifGeneratoePage();
+        },
+      ),
+      GoRoute(
+        path: "/image",
+        name: RouterNames.imagePage,
+        builder: (context, state) {
+          return GifGeneratoePage();
+        },
+      ),
+      GoRoute(
+        path: "/download",
+        name: RouterNames.downloadPage,
+        builder: (context, state) {
+          return VideoDownloadPage();
         },
       ),
     ],

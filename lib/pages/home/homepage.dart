@@ -27,26 +27,26 @@ class _HomepageState extends State<Homepage> {
     ),
     ServiceModel(
       title: "Video downloder",
-      description: "Download ",
+      description: "Download free YT,Tiktok & Insta video",
       icon: Icons.download,
+      route: RouterNames.downloadPage,
+    ),
+    ServiceModel(
+      title: "Image Generator",
+      description: "Convert your ideas into visuals",
+      icon: Icons.image,
+      route: RouterNames.gifPage,
+    ),
+    ServiceModel(
+      title: "Audio Extractor",
+      description: "Convert Images Into meemes",
+      icon: Icons.audio_file_outlined,
       route: RouterNames.gifPage,
     ),
     ServiceModel(
       title: "Meme Maker",
       description: "Convert Images Into meemes",
-      icon: Icons.image,
-      route: RouterNames.gifPage,
-    ),
-    ServiceModel(
-      title: "Meme Maker",
-      description: "Convert Images Into meemes",
-      icon: Icons.image,
-      route: RouterNames.gifPage,
-    ),
-    ServiceModel(
-      title: "Meme Maker",
-      description: "Convert Images Into meemes",
-      icon: Icons.image,
+      icon: Icons.photo_filter,
       route: RouterNames.gifPage,
     ),
   ];
@@ -112,13 +112,28 @@ class _HomepageState extends State<Homepage> {
                               color: colorMineShaft,
                             ),
                           )
-                          : Text(
-                            "Welcome Back ${user.displayName}",
-                            style: FontStyles().fontTitle.copyWith(
-                              color: colorFern,
-                              fontSize: 20,
+                          : RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "Welcome Back ",
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: colorMineShaft,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: user.displayName,
+                                  style: FontStyles().fontTitle.copyWith(
+                                    color: colorFern,
+                                    fontSize: 22,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+
                       SizedBox(height: 12),
 
                       //service list
