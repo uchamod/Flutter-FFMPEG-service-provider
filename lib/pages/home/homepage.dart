@@ -35,7 +35,7 @@ class _HomepageState extends State<Homepage> {
       title: "Image Generator",
       description: "Convert your ideas into visuals",
       icon: Icons.image,
-      route: RouterNames.gifPage,
+      route: RouterNames.imagePage,
     ),
     ServiceModel(
       title: "Audio Extractor",
