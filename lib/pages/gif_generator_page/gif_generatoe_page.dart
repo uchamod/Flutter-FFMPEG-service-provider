@@ -42,7 +42,7 @@ class _GifGeneratoePageState extends State<GifGeneratoePage> {
   Future<void> _selectVideoFromDevice() async {
     try {
       // await _gifGeneratorServices.requestStoragePermission();
-      final videoPath = await _gifGeneratorServices.pickVideoFile();
+      final videoPath = await GifGeneratorServices.pickVideoFile();
       if (videoPath != null) {
         setState(() {
           _selectedVideoPath = videoPath;
@@ -162,7 +162,7 @@ class _GifGeneratoePageState extends State<GifGeneratoePage> {
   //save gif in deveice gallery
   Future<void> _saveGifInGallery() async {
     if (_generatevideoPath == null) return;
-    final isSaved = await _gifGeneratorServices.saveGitInGallery(
+    final isSaved = await GifGeneratorServices.saveGitInGallery(
       _generatevideoPath!,
     );
 

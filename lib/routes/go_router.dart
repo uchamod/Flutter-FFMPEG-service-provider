@@ -1,3 +1,4 @@
+import 'package:ffmpeg_base_minitask_executer/pages/audio_page/audio_extractor_page.dart';
 import 'package:ffmpeg_base_minitask_executer/pages/auth/login.dart';
 import 'package:ffmpeg_base_minitask_executer/pages/error/error_page.dart';
 import 'package:ffmpeg_base_minitask_executer/pages/gif_generator_page/gif_generatoe_page.dart';
@@ -71,6 +72,13 @@ class GoRouterClass {
         name: RouterNames.downloadPage,
         builder: (context, state) {
           return VideoDownloadPage();
+        },
+      ),
+      GoRoute(
+        path: "/audio",
+        name: RouterNames.audioPage,
+        builder: (context, state) {
+          return AudioExtractorPage();
         },
       ),
     ],

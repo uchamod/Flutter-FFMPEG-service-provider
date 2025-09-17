@@ -196,9 +196,12 @@ class _ImageGeneratorState extends State<ImageGenerator> {
                     elevation: 2,
                     padding: EdgeInsets.all(12),
                   ),
-                  onPressed: () async {
-                    await _generateImage();
-                  },
+                  onPressed:
+                      _isProcessing
+                          ? null
+                          : () async {
+                            await _generateImage();
+                          },
                   label: Text(
                     "Generate Image",
                     style: FontStyles().fontSubTitle.copyWith(
@@ -207,7 +210,14 @@ class _ImageGeneratorState extends State<ImageGenerator> {
                   ),
                   icon:
                       _isProcessing
-                          ? LinearProgressIndicator(color: colorMercury)
+                          ? SizedBox(
+                            width: 28,
+                            height: 28,
+                            child: CircularProgressIndicator(
+                              color: colorMercury,
+                              strokeWidth: 2,
+                            ),
+                          )
                           : Icon(
                             Icons.image_outlined,
                             size: 28,
@@ -229,9 +239,12 @@ class _ImageGeneratorState extends State<ImageGenerator> {
                       elevation: 2,
                       padding: EdgeInsets.all(12),
                     ),
-                    onPressed: () async {
-                      await _savedImage(imageUrl!);
-                    },
+                    onPressed:
+                        _isDownloading
+                            ? null
+                            : () async {
+                              await _savedImage(imageUrl!);
+                            },
                     label: Text(
                       _saveButtonText,
                       style: FontStyles().fontSubTitle.copyWith(
@@ -240,7 +253,14 @@ class _ImageGeneratorState extends State<ImageGenerator> {
                     ),
                     icon:
                         _isDownloading
-                            ? null
+                            ? SizedBox(
+                              width: 28,
+                              height: 28,
+                              child: CircularProgressIndicator(
+                                color: colorMercury,
+                                strokeWidth: 2,
+                              ),
+                            )
                             : Icon(Icons.save, size: 28, color: colorMercury),
                   ),
                 ),

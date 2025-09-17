@@ -79,7 +79,7 @@ class GifGeneratorServices {
   }
 
   // Request storage permission
-  Future<bool> requestStoragePermission() async {
+ static Future<bool> requestStoragePermission() async {
     if (Platform.isAndroid) {
       var status = await Permission.storage.status;
       if (!status.isGranted) {
@@ -91,7 +91,7 @@ class GifGeneratorServices {
   }
 
   //pick video fie from device
-  Future<String?> pickVideoFile() async {
+static  Future<String?> pickVideoFile() async {
     try {
       if (await requestStoragePermission()) {
         throw Exception('Storage permission denied');
@@ -138,7 +138,7 @@ class GifGeneratorServices {
   }
 
   //Save GIF to gallery
-  Future<bool> saveGitInGallery(String gifPath) async {
+ static Future<bool> saveGitInGallery(String gifPath) async {
     try {
       final result = await GallerySaver.saveImage(gifPath);
       return result ?? false;

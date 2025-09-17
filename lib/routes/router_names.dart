@@ -7,4 +7,5 @@ class RouterNames {
   static const String gifPage = "gif";
   static const String imagePage = "image";
   static const String downloadPage = "download";
+  static const String audioPage = "audio";
 }

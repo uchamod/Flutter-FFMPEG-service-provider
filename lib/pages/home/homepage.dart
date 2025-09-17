@@ -41,7 +41,7 @@ class _HomepageState extends State<Homepage> {
       title: "Audio Extractor",
       description: "Convert Images Into meemes",
       icon: Icons.audio_file_outlined,
-      route: RouterNames.gifPage,
+      route: RouterNames.audioPage,
     ),
     ServiceModel(
       title: "Meme Maker",
