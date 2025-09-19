@@ -44,10 +44,10 @@ class _HomepageState extends State<Homepage> {
       route: RouterNames.audioPage,
     ),
     ServiceModel(
-      title: "Meme Maker",
-      description: "Convert Images Into meemes",
-      icon: Icons.photo_filter,
-      route: RouterNames.gifPage,
+      title: "Music generater",
+      description: "Generate Music tracks",
+      icon: Icons.music_note,
+      route: RouterNames.musicPage,
     ),
   ];
   @override

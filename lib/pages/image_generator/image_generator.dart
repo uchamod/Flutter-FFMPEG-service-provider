@@ -3,9 +3,8 @@ import 'package:ffmpeg_base_minitask_executer/services/image_generation_service/
 import 'package:ffmpeg_base_minitask_executer/util/colors.dart';
 import 'package:ffmpeg_base_minitask_executer/util/constants.dart';
 import 'package:ffmpeg_base_minitask_executer/util/font_styles.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:ffmpeg_base_minitask_executer/widgets/navigator.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class ImageGenerator extends StatefulWidget {
   const ImageGenerator({super.key});
@@ -90,33 +89,7 @@ class _ImageGeneratorState extends State<ImageGenerator> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //back to homepage
-              GestureDetector(
-                onTap: () {
-                  GoRouter.of(context).goNamed(RouterNames.homePage);
-                },
-                child: Container(
-                  padding: EdgeInsets.all(4),
-                  width: 100,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Row(
-                    spacing: 4,
-                    mainAxisAlignment: MainAxisAlignment.center,
-
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.arrow_back, size: 28, color: colordustyGray),
-                      Icon(
-                        CupertinoIcons.home,
-                        size: 28,
-                        color: colordustyGray,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              NavigatorWidget(pagename: RouterNames.homePage),
               SizedBox(height: 8),
               //select aspect ratio
               Text(

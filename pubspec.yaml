@@ -58,6 +58,8 @@ dependencies:
   gallery_saver_plus: ^3.2.9
   dio: ^5.9.0
   just_audio: ^0.10.5
+  flutter_dotenv: ^6.0.0
+  
   
  
 

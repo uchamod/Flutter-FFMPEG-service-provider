@@ -5,11 +5,10 @@ import 'package:ffmpeg_base_minitask_executer/services/downloader_services/video
 import 'package:ffmpeg_base_minitask_executer/util/colors.dart';
 import 'package:ffmpeg_base_minitask_executer/util/constants.dart';
 import 'package:ffmpeg_base_minitask_executer/util/font_styles.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:ffmpeg_base_minitask_executer/widgets/navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gallery_saver_plus/gallery_saver.dart';
-import 'package:go_router/go_router.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoDownloadPage extends StatefulWidget {
@@ -127,33 +126,7 @@ class _VideoDownloadPageState extends State<VideoDownloadPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    GoRouter.of(context).goNamed(RouterNames.homePage);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(4),
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: Row(
-                      spacing: 4,
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.arrow_back, size: 28, color: colordustyGray),
-                        Icon(
-                          CupertinoIcons.home,
-                          size: 28,
-                          color: colordustyGray,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                NavigatorWidget(pagename: RouterNames.homePage),
                 SizedBox(height: 16),
 
                 if (_statusMessage.isNotEmpty) ...[

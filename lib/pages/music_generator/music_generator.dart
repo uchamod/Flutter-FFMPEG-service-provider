@@ -1,8 +1,7 @@
 import 'dart:io';
 
 import 'package:ffmpeg_base_minitask_executer/routes/router_names.dart';
-import 'package:ffmpeg_base_minitask_executer/services/audio_services/audio_services.dart';
-import 'package:ffmpeg_base_minitask_executer/services/gif_generator_services/gif_generator_services.dart';
+import 'package:ffmpeg_base_minitask_executer/services/elevanlabs_services/ElevanLab_services.dart';
 import 'package:ffmpeg_base_minitask_executer/util/colors.dart';
 import 'package:ffmpeg_base_minitask_executer/util/constants.dart';
 import 'package:ffmpeg_base_minitask_executer/util/font_styles.dart';
@@ -11,71 +10,72 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
-class AudioExtractorPage extends StatefulWidget {
-  const AudioExtractorPage({super.key});
+class MusicGeneratorPage extends StatefulWidget {
+  const MusicGeneratorPage({super.key});
 
   @override
-  State<AudioExtractorPage> createState() => _AudioExtractorPageState();
+  State<MusicGeneratorPage> createState() => _MusicGeneratorPageState();
 }
 
-class _AudioExtractorPageState extends State<AudioExtractorPage> {
-  String? _audioFilePath;
-  String? _extractedAudioPath;
-  bool _isProcessing = false;
+class _MusicGeneratorPageState extends State<MusicGeneratorPage> {
+  String? _prompt;
+  String? _musicFilePath;
+  int _duration = 10000;
   bool _isDownloading = false;
-  String _selectedFormat = 'mp3';
-  final AudioServices _audioServices = AudioServices();
-  final List<String> _audioFormats = ['mp3', 'aac', 'wav', 'm4a'];
-  final AudioPlayer _audioPlayer = AudioPlayer();
-  bool _isPlaying = false;
-  Duration _duration = Duration.zero;
-  Duration _position = Duration.zero;
-  //select video
-  Future<void> _selectVideo() async {
+  bool _isProcessing = false;
+  AudioPlayer _audioPlayer = AudioPlayer();
+  final List<int> _durations = [10000, 15000, 20000, 30000];
+  final TextEditingController _controller = TextEditingController();
+  final ElevanlabServices _elevanlabServices = ElevanlabServices();
+  bool _isPlayer = false;
+  Duration _playerDuration = Duration.zero;
+  Duration _playerPosition = Duration.zero;
+  //get music by prompt
+  Future<void> _getMusicByPrompt() async {
+    if (_controller.text.trim().isEmpty) return;
+
     try {
-      final videoPath = await GifGeneratorServices.pickVideoFile();
-      if (videoPath != null) {
-        setState(() {
-          _audioFilePath = videoPath;
-        });
+      setState(() {
+        _prompt = _controller.text;
+        _isProcessing = true;
+      });
+      String? musicFilePath = await _elevanlabServices.generateMusic(
+        prompt: _prompt!,
+        duration: _duration,
+      );
+
+      setState(() {
+        _isProcessing = false;
+        _musicFilePath = musicFilePath;
+        _prompt = null;
+      });
+      await _audioPlayer.setFilePath(_musicFilePath!);
+      if (musicFilePath != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('saved generated audio track'),
+            backgroundColor: Colors.green,
+          ),
+        );
       }
     } catch (err) {
-      print("faild to select audio $err");
-    }
-  }
-
-  //extract audio
-  Future<void> _extreactAudio() async {
-    if (_audioFilePath == null) return;
-    setState(() {
-      _isProcessing = true;
-    });
-    try {
-      final extractedAudiopath = await _audioServices.extractAudio(
-        videoPath: _audioFilePath!,
-        format: _selectedFormat,
+      print("faile to get music by prompt $err");
+      setState(() {
+        _isProcessing = false;
+        _prompt = null;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed generate audio track'),
+          backgroundColor: Colors.red,
+        ),
       );
-      // await _audioPlayer.setAudioSource(
-      //   AudioSource.asset(_extractedAudioPath!),
-      // );
-
-      setState(() {
-        _isProcessing = false;
-        _extractedAudioPath = extractedAudiopath;
-      });
-      await _audioPlayer.setFilePath(_extractedAudioPath!);
-    } catch (err) {
-      setState(() {
-        _isProcessing = false;
-        _audioFilePath = null;
-      });
-      print("failed to extract audio $err");
     }
   }
 
   //save gif in deveice gallery
   Future<void> _saveAudioInDevice() async {
-    if (_extractedAudioPath == null) return;
+    if (_musicFilePath == null) return;
 
     setState(() {
       _isDownloading = true;
@@ -85,9 +85,9 @@ class _AudioExtractorPageState extends State<AudioExtractorPage> {
       String? outputPath = await FilePicker.platform.saveFile(
         dialogTitle: "Save Audio Fie",
         fileName:
-            "audio_${DateTime.now().millisecondsSinceEpoch}.${_extractedAudioPath!.split('.').last}",
+            "audio_${DateTime.now().millisecondsSinceEpoch}.${_musicFilePath!.split('.').last}",
         type: FileType.audio,
-        bytes: await File(_extractedAudioPath!).readAsBytes(),
+        bytes: await File(_musicFilePath!).readAsBytes(),
       );
       if (outputPath != null) {
         // File originalFile = File(_extractedAudioPath!);
@@ -112,34 +112,28 @@ class _AudioExtractorPageState extends State<AudioExtractorPage> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _initPlayer();
-  }
-
   //initialize audio player
   void _initPlayer() {
     _audioPlayer.durationStream.listen((duration) {
       setState(() {
-        _duration = duration ?? Duration.zero;
+        _playerDuration = duration ?? Duration.zero;
       });
     });
     _audioPlayer.positionStream.listen((position) {
       setState(() {
-        _position = position;
+        _playerPosition = position;
       });
     });
     _audioPlayer.playerStateStream.listen((state) {
       setState(() {
-        _isPlaying = state.playing;
+        _isPlayer = state.playing;
       });
     });
   }
 
   //play pause audio
   Future<void> _playPause() async {
-    if (_isPlaying) {
+    if (_isPlayer) {
       await _audioPlayer.pause();
     } else {
       await _audioPlayer.play();
@@ -152,8 +146,15 @@ class _AudioExtractorPageState extends State<AudioExtractorPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _initPlayer();
+  }
+
+  @override
   void dispose() {
-    _audioPlayer.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -166,46 +167,60 @@ class _AudioExtractorPageState extends State<AudioExtractorPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //back to homepage
+              //go to home page
               NavigatorWidget(pagename: RouterNames.homePage),
-              SizedBox(height: 28),
-              //select video file
+              //duration
+              SizedBox(height: 24),
+
               Text(
-                "Select Audio File :",
+                "Set duration:",
                 style: FontStyles().fontSubTitle.copyWith(fontSize: 16),
               ),
-              SizedBox(height: 16),
-              if (_audioFilePath != null) ...[
-                Text(_audioFilePath!, style: FontStyles().fontBody),
-                SizedBox(height: 16),
-                //select audio format
-                Text(
-                  "Select Audio Format :",
-                  style: FontStyles().fontSubTitle.copyWith(fontSize: 16),
-                ),
-                SizedBox(height: 6),
-                Wrap(
-                  spacing: 6,
-                  children:
-                      _audioFormats.map((format) {
-                        return ChoiceChip(
-                          label: Text(format.toUpperCase()),
-                          selected: _selectedFormat == format,
-                          checkmarkColor: colorFern,
+              SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                children:
+                    _durations.map((d) {
+                      return ChoiceChip(
+                        label: Text("${d / 1000} sec"),
+                        selected: _duration == d,
+                        checkmarkColor: colorFern,
 
-                          onSelected: (value) {
-                            if (value) {
-                              setState(() {
-                                _selectedFormat = format;
-                              });
-                            }
-                          },
-                        );
-                      }).toList(),
+                        onSelected: (value) {
+                          if (value) {
+                            setState(() {
+                              _duration = d;
+                            });
+                          }
+                        },
+                      );
+                    }).toList(),
+              ),
+              SizedBox(height: 8),
+              //prompt
+              TextField(
+                controller: _controller,
+                maxLines: null,
+                minLines: 3,
+                cursorColor: colordustyGray,
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(4),
+                    borderSide: BorderSide(color: colordustyGray, width: 2),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(4),
+                    borderSide: BorderSide(color: colordustyGray, width: 2),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 4,
+                  ),
+                  hintText: "Type your prompt here...",
+                  hintStyle: FontStyles().fontBody,
                 ),
-                SizedBox(height: 8),
-              ],
-              //select / extract audio
+              ),
+              SizedBox(height: 8),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
@@ -214,16 +229,11 @@ class _AudioExtractorPageState extends State<AudioExtractorPage> {
                     elevation: 2,
                     padding: EdgeInsets.all(12),
                   ),
-                  onPressed:
-                      _audioFilePath != null
-                          ? () async {
-                            _extreactAudio();
-                          }
-                          : () async {
-                            _selectVideo();
-                          },
+                  onPressed: () async {
+                    await _getMusicByPrompt();
+                  },
                   label: Text(
-                    _audioFilePath != null ? "Extract Audio" : "Select video",
+                    "Generate Music",
                     style: FontStyles().fontSubTitle.copyWith(
                       color: colorMercury,
                     ),
@@ -239,20 +249,20 @@ class _AudioExtractorPageState extends State<AudioExtractorPage> {
                             ),
                           )
                           : Icon(
-                            Icons.video_library,
+                            Icons.music_note,
                             size: 28,
                             color: colorMercury,
                           ),
                 ),
               ),
-              if (_extractedAudioPath != null) ...[
+              if (_musicFilePath != null) ...[
                 SizedBox(height: 16),
                 //audio player
                 StreamBuilder<Duration>(
                   stream: _audioPlayer.positionStream,
                   builder: (context, snapshot) {
                     final position = snapshot.data ?? Duration.zero;
-                    final duration = _duration;
+                    final duration = _playerDuration;
                     return Column(
                       children: [
                         Slider(
@@ -274,7 +284,7 @@ class _AudioExtractorPageState extends State<AudioExtractorPage> {
                               iconSize: 42,
                               color: colordustyGray,
                               icon: Icon(
-                                _isPlaying ? Icons.pause : Icons.play_arrow,
+                                _isPlayer ? Icons.pause : Icons.play_arrow,
                               ),
                               onPressed: _playPause,
                             ),
@@ -285,10 +295,7 @@ class _AudioExtractorPageState extends State<AudioExtractorPage> {
                     );
                   },
                 ),
-
-                //saved in gallery
                 SizedBox(height: 16),
-                //saved button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
