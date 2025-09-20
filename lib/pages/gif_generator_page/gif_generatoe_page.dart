@@ -8,6 +8,7 @@ import 'package:ffmpeg_base_minitask_executer/util/font_styles.dart';
 import 'package:ffmpeg_base_minitask_executer/widgets/gif/qulity_setting.dart';
 import 'package:ffmpeg_base_minitask_executer/widgets/gif/video_seection.dart';
 import 'package:ffmpeg_base_minitask_executer/widgets/navigator.dart';
+import 'package:ffmpeg_base_minitask_executer/widgets/reusabe_button.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -29,6 +30,7 @@ class _GifGeneratoePageState extends State<GifGeneratoePage> {
   //status tracking
   bool _isProcessing = false;
   bool _isDownloading = false;
+  bool _isSaving = false;
   double _progress = 0.0;
 
   // GIF Settings
@@ -161,10 +163,15 @@ class _GifGeneratoePageState extends State<GifGeneratoePage> {
   //save gif in deveice gallery
   Future<void> _saveGifInGallery() async {
     if (_generatevideoPath == null) return;
+    setState(() {
+      _isSaving = true;
+    });
     final isSaved = await GifGeneratorServices.saveGitInGallery(
       _generatevideoPath!,
     );
-
+    setState(() {
+      _isSaving = false;
+    });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(isSaved ? 'GIF saved in gallery!' : 'Failed to save GIF'),
@@ -239,24 +246,30 @@ class _GifGeneratoePageState extends State<GifGeneratoePage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // generate gif button
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: colorFern,
-                        elevation: 2,
-                        padding: EdgeInsets.all(12),
-                      ),
-                      onPressed: () async {
-                        await _generateGif();
-                      },
-                      label: Text(
-                        "Generate GIF",
-                        style: FontStyles().fontSubTitle,
-                      ),
-                      icon:
-                          _isProcessing
-                              ? LinearProgressIndicator(color: colorMercury)
-                              : Icon(Icons.gif, size: 28, color: colorMercury),
+                    ReusabeButton(
+                      isDownloading: _isProcessing,
+                      icon: Icons.gif,
+                      text: "Generate GIF",
+                      function: _generateGif,
                     ),
+                    // ElevatedButton.icon(
+                    //   style: ElevatedButton.styleFrom(
+                    //     backgroundColor: colorFern,
+                    //     elevation: 2,
+                    //     padding: EdgeInsets.all(12),
+                    //   ),
+                    //   onPressed: () async {
+                    //     await _generateGif();
+                    //   },
+                    //   label: Text(
+                    //     "Generate GIF",
+                    //     style: FontStyles().fontSubTitle,
+                    //   ),
+                    //   icon:
+                    //       _isProcessing
+                    //           ? LinearProgressIndicator(color: colorMercury)
+                    //           : Icon(Icons.gif, size: 28, color: colorMercury),
+                    // ),
                     SizedBox(height: 12),
                   ],
                 ),
@@ -272,21 +285,36 @@ class _GifGeneratoePageState extends State<GifGeneratoePage> {
                   ),
                   SizedBox(height: 12),
                   //saved button
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorFern,
-                      elevation: 2,
-                      padding: EdgeInsets.all(12),
-                    ),
-                    onPressed: () async {
-                      await _saveGifInGallery();
-                    },
-                    label: Text(
-                      "Saved to Gallery",
-                      style: FontStyles().fontSubTitle,
-                    ),
-                    icon: Icon(Icons.save, size: 28, color: colorMercury),
+                  ReusabeButton(
+                    isDownloading: _isSaving,
+                    icon: Icons.save,
+                    text: "Saved to Gallery",
+                    function: _saveGifInGallery,
                   ),
+                  // ElevatedButton.icon(
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: colorFern,
+                  //     elevation: 2,
+                  //     padding: EdgeInsets.all(12),
+                  //   ),
+                  //   onPressed: () async {
+                  //     await _saveGifInGallery();
+                  //   },
+                  //   label: Text(
+                  //     "Saved to Gallery",
+                  //     style: FontStyles().fontSubTitle,
+                  //   ),
+                  //   icon:
+                  //       _isSaving
+                  //           ? SizedBox(
+                  //             width: 28,
+                  //             height: 28,
+                  //             child: CircularProgressIndicator(
+                  //               color: colorMercury,
+                  //             ),
+                  //           )
+                  //           : Icon(Icons.save, size: 28, color: colorMercury),
+                  // ),
                 ],
               ],
             ],

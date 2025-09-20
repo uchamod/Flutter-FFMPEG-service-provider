@@ -6,6 +6,7 @@ import 'package:ffmpeg_base_minitask_executer/util/colors.dart';
 import 'package:ffmpeg_base_minitask_executer/util/constants.dart';
 import 'package:ffmpeg_base_minitask_executer/util/font_styles.dart';
 import 'package:ffmpeg_base_minitask_executer/widgets/navigator.dart';
+import 'package:ffmpeg_base_minitask_executer/widgets/reusabe_button.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
@@ -221,40 +222,46 @@ class _MusicGeneratorPageState extends State<MusicGeneratorPage> {
                 ),
               ),
               SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorFern,
-                    elevation: 2,
-                    padding: EdgeInsets.all(12),
-                  ),
-                  onPressed: () async {
-                    await _getMusicByPrompt();
-                  },
-                  label: Text(
-                    "Generate Music",
-                    style: FontStyles().fontSubTitle.copyWith(
-                      color: colorMercury,
-                    ),
-                  ),
-                  icon:
-                      _isProcessing
-                          ? SizedBox(
-                            width: 28,
-                            height: 28,
-                            child: CircularProgressIndicator(
-                              color: colorMercury,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Icon(
-                            Icons.music_note,
-                            size: 28,
-                            color: colorMercury,
-                          ),
-                ),
+              ReusabeButton(
+                isDownloading: _isProcessing,
+                icon: Icons.music_note,
+                text: "Generate Music",
+                function: _getMusicByPrompt,
               ),
+              // SizedBox(
+              //   width: double.infinity,
+              //   child: ElevatedButton.icon(
+              //     style: ElevatedButton.styleFrom(
+              //       backgroundColor: colorFern,
+              //       elevation: 2,
+              //       padding: EdgeInsets.all(12),
+              //     ),
+              //     onPressed: () async {
+              //       await _getMusicByPrompt();
+              //     },
+              //     label: Text(
+              //       "Generate Music",
+              //       style: FontStyles().fontSubTitle.copyWith(
+              //         color: colorMercury,
+              //       ),
+              //     ),
+              //     icon:
+              //         _isProcessing
+              //             ? SizedBox(
+              //               width: 28,
+              //               height: 28,
+              //               child: CircularProgressIndicator(
+              //                 color: colorMercury,
+              //                 strokeWidth: 2,
+              //               ),
+              //             )
+              //             : Icon(
+              //               Icons.music_note,
+              //               size: 28,
+              //               color: colorMercury,
+              //             ),
+              //   ),
+              // ),
               if (_musicFilePath != null) ...[
                 SizedBox(height: 16),
                 //audio player
@@ -296,36 +303,42 @@ class _MusicGeneratorPageState extends State<MusicGeneratorPage> {
                   },
                 ),
                 SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorFern,
-                      elevation: 2,
-                      padding: EdgeInsets.all(12),
-                    ),
-                    onPressed: () async {
-                      await _saveAudioInDevice();
-                    },
-                    label: Text(
-                      "Saved to Gallery",
-                      style: FontStyles().fontSubTitle.copyWith(
-                        color: colorMercury,
-                      ),
-                    ),
-                    icon:
-                        _isDownloading
-                            ? SizedBox(
-                              width: 28,
-                              height: 28,
-                              child: CircularProgressIndicator(
-                                color: colorMercury,
-                                strokeWidth: 2,
-                              ),
-                            )
-                            : Icon(Icons.save, size: 28, color: colorMercury),
-                  ),
+                ReusabeButton(
+                  isDownloading: _isDownloading,
+                  icon: Icons.save,
+                  text: "Saved to Gallery",
+                  function: _saveAudioInDevice,
                 ),
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: ElevatedButton.icon(
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: colorFern,
+                //       elevation: 2,
+                //       padding: EdgeInsets.all(12),
+                //     ),
+                //     onPressed: () async {
+                //       await _saveAudioInDevice();
+                //     },
+                //     label: Text(
+                //       "Saved to Gallery",
+                //       style: FontStyles().fontSubTitle.copyWith(
+                //         color: colorMercury,
+                //       ),
+                //     ),
+                //     icon:
+                //         _isDownloading
+                //             ? SizedBox(
+                //               width: 28,
+                //               height: 28,
+                //               child: CircularProgressIndicator(
+                //                 color: colorMercury,
+                //                 strokeWidth: 2,
+                //               ),
+                //             )
+                //             : Icon(Icons.save, size: 28, color: colorMercury),
+                //   ),
+                // ),
               ],
             ],
           ),

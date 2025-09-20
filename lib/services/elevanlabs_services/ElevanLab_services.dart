@@ -30,6 +30,7 @@ class ElevanlabServices {
         final file = File(filePath);
         await file.writeAsBytes(response.bodyBytes);
         print("✅ Music generated and saved: $filePath");
+
         return filePath;
       } else {
         print("❌ Failed: ${response.statusCode}, ${response.body}");
@@ -37,7 +38,6 @@ class ElevanlabServices {
       }
     } catch (err) {
       print("music genaration failed $err");
-      return null;
     }
   }
 }
@@ -56,3 +56,7 @@ class ElevanlabServices {
 //   "prompt": "a high temperature latin music beat mix with classical guitar music",
 //   "music_length_ms": 15000
 // }'
+// 6wBzMQJmiRLCsjGfVrho
+// 2pdgqQWLa9fwzJCkdAmV
+// https://storage.googleapis.com/eleven-public-prod/database/user/HcPKg0cwuIUVDrV9S03ohh8NZnA3/voices/2pdgqQWLa9fwzJCkdAmV/47dd32f0-8e58-496c-bc5b-341abc8b7a15.mp3
+// https://storage.googleapis.com/eleven-public-prod/database/user/HcPKg0cwuIUVDrV9S03ohh8NZnA3/voices/6wBzMQJmiRLCsjGfVrho/99e94a64-cc7c-4de2-9338-ae26688603c1.mp3
